@@ -28,10 +28,7 @@ public:
 private:
 	Vertex m_bottomLeft;
 	Vertex m_topRight;
-	double m_width;
-	double m_height;
-	bool checkCond(Vertex, Vertex);
-	void changeToDefault(Vertex &, Vertex &);
-	void setWidthHeight();
-	Vertex centerToPoint(Vertex, Vertex, double);
+	bool checkCond(Vertex, Vertex); //for future use as well
+	void changeToDefault();
+	Vertex centerToPoint(Vertex, Vertex, double, bool botLeft);
 };
