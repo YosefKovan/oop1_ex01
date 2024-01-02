@@ -9,9 +9,9 @@ Rectangle::Rectangle(const Vertex& bottomLeft, const Vertex& topRight)
 	 m_topRight(topRight.m_col, topRight.m_row)
 {
 	if (checkCond(m_bottomLeft, m_topRight))
-		changeToDefault(m_bottomLeft, m_topRight);
+		changeToDefault();
 	
-	setWidthHeight(); 
+	
 }
 //------------------------------------------------------
 Rectangle::Rectangle(const Vertex vertices[2])
@@ -19,19 +19,18 @@ Rectangle::Rectangle(const Vertex vertices[2])
 	  m_topRight(vertices[1].m_col, vertices[1].m_row)
 {
 	if (checkCond(m_bottomLeft, m_topRight))
-		changeToDefault(m_bottomLeft, m_topRight);
-	
-	setWidthHeight();
+		changeToDefault();
 	 
+
 }
 //------------------------------------------------------
 Rectangle::Rectangle(double x0, double y0, double x1, double y1)
 	: m_bottomLeft(x0, y0), m_topRight(x1, y1)
 {
 	if (checkCond(m_bottomLeft, m_topRight))
-		changeToDefault(m_bottomLeft, m_topRight);
+		changeToDefault();
 	 
-	setWidthHeight();	 
+	 
 }
 //------------------------------------------------------
 Rectangle::Rectangle(const Vertex& start, double width, double height)
@@ -39,14 +38,13 @@ Rectangle::Rectangle(const Vertex& start, double width, double height)
 	  m_topRight(start.m_col + std::abs(width), start.m_row + std::abs(height))
 {
 	if (checkCond(m_bottomLeft, m_topRight))
-		changeToDefault(m_bottomLeft, m_topRight);
-	  
-	setWidthHeight();
+		changeToDefault();
+	  	
 }
 //------------------------------------------------------
 bool Rectangle::checkCond(Vertex bottomLeft, Vertex topRight) {
 
-	if (bottomLeft.isHigherThan(topRight) || m_bottomLeft.isToTheRightOf(topRight))
+	if (bottomLeft.isHigherThan(topRight) || bottomLeft.isToTheRightOf(topRight))
 		return true;
 
 	if (!bottomLeft.isValid() || !topRight.isValid())
@@ -55,17 +53,12 @@ bool Rectangle::checkCond(Vertex bottomLeft, Vertex topRight) {
 	return false;
 }
 //------------------------------------------------------
-void Rectangle::changeToDefault(Vertex &bottomLeft, Vertex &topRight) {
+void Rectangle::changeToDefault() {
 
-	bottomLeft.m_col = 20; 
-	bottomLeft.m_row = 10;  
-	topRight.m_col = 30;
-	topRight.m_row = 20;
-}
-//------------------------------------------------------
-void Rectangle::setWidthHeight() {
-	m_width = m_topRight.m_col - m_bottomLeft.m_col;
-	m_height = m_topRight.m_row - m_bottomLeft.m_row;
+	m_bottomLeft.m_col = 20; 
+	m_bottomLeft.m_row = 10;  
+	m_topRight.m_col = 30;
+	m_topRight.m_row = 20;
 }
 //------------------------------------------------------
 Vertex Rectangle::getBottomLeft() const{
@@ -80,12 +73,12 @@ Vertex Rectangle::getTopRight() const{
 //------------------------------------------------------
 double Rectangle::getWidth() const{
 	
-	return m_width;
+	return m_topRight.m_col - m_bottomLeft.m_col;
 }
 //------------------------------------------------------
 double Rectangle::getHeight() const{
 
-	return m_height;
+	return m_topRight.m_row - m_bottomLeft.m_row;
 }
 //------------------------------------------------------
 void Rectangle::draw(Board& board) const {
@@ -110,12 +103,12 @@ Rectangle Rectangle::getBoundingRectangle() const {
 //------------------------------------------------------
 double Rectangle::getArea() const{
 	
- 	return m_width * m_height;
+	return getHeight() * getWidth();
 }
 //------------------------------------------------------
 double Rectangle::getPerimeter() const {
 	
-	return (m_width * 2) + (m_height * 2);
+	return getWidth() * 2 + getHeight() * 2;
 }
 //------------------------------------------------------
 Vertex Rectangle::getCenter() const {
@@ -132,8 +125,8 @@ Vertex Rectangle::getCenter() const {
 bool Rectangle::scale(double factor){
 	
 	Vertex center = getCenter();
-	Vertex bottomLeftTemp = centerToPoint(center, m_bottomLeft, factor);
-	Vertex topRightTemp = centerToPoint(center, m_topRight, factor);
+	Vertex bottomLeftTemp = centerToPoint(center, m_bottomLeft, factor, true);
+	Vertex topRightTemp = centerToPoint(center, m_topRight, factor, false);
     
 	if (checkCond(bottomLeftTemp, topRightTemp))
 		return false;
@@ -143,13 +136,21 @@ bool Rectangle::scale(double factor){
 	return true;
 }
 //------------------------------------------------------
-Vertex Rectangle::centerToPoint(Vertex center, Vertex point, double factor) {
+Vertex Rectangle::centerToPoint(Vertex center, Vertex point, double factor, bool botLeft) {
 
 	double xTemp, yTemp;
-	xTemp = abs((center.m_col - point.m_col)) * factor + center.m_col;
-	yTemp = abs(center.m_row - point.m_row) * factor + center.m_row;
+	
+	if (botLeft) {
+		xTemp = center.m_col - abs((center.m_col - point.m_col)) * factor ;
+		yTemp = center.m_row - abs(center.m_row - point.m_row) * factor;
+	}
+	else {
+	   xTemp = abs((center.m_col - point.m_col)) * factor + center.m_col;
+	   yTemp = abs(center.m_row - point.m_row) * factor + center.m_row;
+	}
+	
 	Vertex temp(xTemp, yTemp);
 	return temp;
 
 }
-//------------------------------------------------------
+
