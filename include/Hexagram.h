@@ -19,8 +19,8 @@ public:
 	bool scale(double factor);
 
 private:
-	Triangle m_up;
-	Triangle m_down;
+	Triangle m_firstTriangle;
+	Triangle m_secondTriangle;
 	bool checkCond();
 	void DefaultHexagram();
 };
