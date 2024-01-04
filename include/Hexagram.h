@@ -51,6 +51,32 @@ void Hexagram::draw(Board& board) const {
 	m_secondTriangle.draw(board);
 }
 
+	//------------------------------------------------
+
+Rectangle Hexagram::getBoundingRectangle() const {
+
+	return (1,1,5,5)
+	}
+
+	//-----------------------------------------------
+
+double Hexagram::getArea() const {
+
+	return 1;
+	}
+
+	//----------------------------------------------
+
+double Hexagram::getPerimeter() const
+
+return (1, 1);
+
+	//---------------------------------------------
+
+	Vertex Hexagram::getCenter() const
+
+		return (1, 1)
+
 //----------------------------------------------------------------------
 bool Hexagram::scale(double factor) {
 
