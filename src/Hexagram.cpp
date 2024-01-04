@@ -55,28 +55,43 @@ void Hexagram::draw(Board& board) const {
 
 Rectangle Hexagram::getBoundingRectangle() const {
 
-	Rectangle n = 1.0, 1.0, 5, 5
-	return n;
+	Rectangle Hexagram::getBoundingRectangle() const {
+		// Get the bounding rectangles of each triangle
+		Rectangle rect1 = m_firstTriangle.getBoundingRectangle();
+		Rectangle rect2 = m_secondTriangle.getBoundingRectangle();
+
+		// Combine the bounding rectangles
+		// This might involve finding the minimum and maximum x and y values
+		// of both rectangles and creating a new rectangle based on those values
+		double minX = std::min(rect1.getBottomLeft().m_col, rect2.getBottomLeft().m_col);
+		double minY = std::min(rect1.getBottomLeft().m_row, rect2.getBottomLeft().m_row);
+		double maxX = std::max(rect1.getTopRight().m_col, rect2.getTopRight().m_col);
+		double maxY = std::max(rect1.getTopRight().m_row, rect2.getTopRight().m_row);
+
+		Rectangle combinedRect(Vertex(minX, minY), Vertex(maxX, maxY));
+		return combinedRect;
+	}
+
 	}
 
 	//-----------------------------------------------
 
 double Hexagram::getArea() const {
 
-	return 1;
+	return m_firstTriangle.getArea() + m_secondTriangle.getArea();
 	}
 
 	//----------------------------------------------
 
 double Hexagram::getPerimeter() const {
 
-	return (1, 1);
+	return m_firstTriangle.getPerimeter() + m_secondTriangle.getPerimeter();
 }
 	//---------------------------------------------
 
 Vertex Hexagram::getCenter() const {
 
-	return (1, 1);
+	return m_firstTriangle.getCenter();
 
 }
 //----------------------------------------------------------------------
@@ -84,4 +99,3 @@ bool Hexagram::scale(double factor) {
 
 
 	return false;
-}
