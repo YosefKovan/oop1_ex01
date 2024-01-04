@@ -118,5 +118,23 @@ bool Triangle::scale(double factor) {
 	if (checkCond())
 		return false;
 	return true;
+
+/*
+Vertex center = getCenter();
+Vertex leftPoint(center.m_col + factor * (m_vertex1.m_col - center.m_col),
+	             center.m_row + factor * (m_vertex1.m_row - center.m_row));
+Vertex middlePoint(m_vertex2.m_col, center.m_row + factor * (m_vertex2.m_row - center.m_row));
+Vertex rightPoint(center.m_col + factor * (m_vertex3.m_col - center.m_col), 
+	              center.m_row + factor * (m_vertex1.m_row - center.m_row));
+
+if (checkCond(leftPoint, middlePoint, rightPoint))
+	return false;
+
+m_vertex1 = leftPoint;
+m_vertex2 = middlePoint;
+m_vertex3 = rightPoint;
+return true;
+*/
+
 }
 
