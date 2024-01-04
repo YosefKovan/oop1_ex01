@@ -24,7 +24,6 @@ private:
 	Vertex m_vertex2;
 	Vertex m_vertex3;
 	double calculateLength(Vertex, Vertex);
-	bool checkCond();
+	bool checkCond(Vertex, Vertex, Vertex);
 	void changeTriangleVertices();
-
 };
