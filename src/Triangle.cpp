@@ -2,21 +2,21 @@
 #include "Triangle.h"
 #include <cmath>
 
-Triangle::Triangle(const Vertex vertices[3]) 
-	 : m_vertex1(vertices[0].m_col, vertices[0].m_row),
-	   m_vertex2(vertices[1].m_col, vertices[1].m_row),
-	   m_vertex3(vertices[2].m_col, vertices[2].m_row)    
+Triangle::Triangle(const Vertex vertices[3])
+	: m_vertex1(vertices[0].m_col, vertices[0].m_row),
+	  m_vertex2(vertices[1].m_col, vertices[1].m_row),
+	  m_vertex3(vertices[2].m_col, vertices[2].m_row)
 {
-	  if(checkCond())
+	if (checkCond(m_vertex1, m_vertex2, m_vertex3))
 		changeTriangleVertices();
 }
 //----------------------------------------------------
-Triangle::Triangle(const Vertex& left, const Vertex& right, double height) 
-     : m_vertex1(left.m_col, left.m_row),
-	   m_vertex2((right.m_col - left.m_col)/2, right.m_row+height),
-	   m_vertex3(right.m_col, right.m_row)
+Triangle::Triangle(const Vertex& left, const Vertex& right, double height)
+	: m_vertex1(left.m_col, left.m_row),
+	m_vertex2((right.m_col - left.m_col) / 2, right.m_row + height),
+	m_vertex3(right.m_col, right.m_row)
 {
-	  if (checkCond())
+	if (checkCond(m_vertex1, m_vertex2, m_vertex3))
 		changeTriangleVertices();
 }
 //----------------------------------------------------
@@ -26,7 +26,7 @@ Vertex Triangle::getVertex(int index) const {
 		return m_vertex1;
 	if (index == 2)
 		return m_vertex2;
-    
+
 	return m_vertex3;
 
 }
@@ -36,35 +36,35 @@ double Triangle::getLength() const {
 	return abs(m_vertex1.m_col - m_vertex3.m_col);
 }
 //----------------------------------------------------
-double Triangle::getHeight() const{
+double Triangle::getHeight() const {
 	return abs(m_vertex1.m_row - m_vertex2.m_row);
 }
 //----------------------------------------------------
-bool Triangle::checkCond() {
+bool Triangle::checkCond(Vertex vertex1, Vertex vertex2, Vertex vertex3) {
 
-	if (!m_vertex1.isValid() || !m_vertex2.isValid() || !m_vertex3.isValid())
+	if (!vertex1.isValid() || !vertex2.isValid() || !vertex3.isValid())
 		return true;
-	if (m_vertex1.m_row != m_vertex3.m_row)
+	if (!doubleEqual(vertex1.m_row ,vertex3.m_row))
 		return true;
-	if (!doubleEqual(getLength(), calculateLength(m_vertex1, m_vertex2)) ||
-		!doubleEqual(getLength(),  calculateLength(m_vertex1, m_vertex2)))
+	if (!doubleEqual(getLength(), calculateLength(vertex1, vertex2)) ||
+		!doubleEqual(getLength(), calculateLength(vertex1, vertex2)))
 		return true;
-	
+
 	return false;
 }
 //----------------------------------------------------
 void Triangle::changeTriangleVertices() {
 
-  m_vertex1.m_col = m_vertex1.m_row = 20;
-  m_vertex2.m_col = 25;
-  m_vertex2.m_row = 20 + sqrt(75);
-  m_vertex3.m_col = 30;
-  m_vertex3.m_row = 20;
+	m_vertex1.m_col = m_vertex1.m_row = 20;
+	m_vertex2.m_col = 25;
+	m_vertex2.m_row = 20 + sqrt(75);
+	m_vertex3.m_col = 30;
+	m_vertex3.m_row = 20;
 
 }
 //----------------------------------------------------
-double Triangle::calculateLength(Vertex vertexA, Vertex vertexB){
-  
+double Triangle::calculateLength(Vertex vertexA, Vertex vertexB) {
+
 	double vectorX = vertexA.m_col - vertexB.m_col;
 	double vectorY = vertexA.m_row - vertexB.m_row;
 	return sqrt(pow(vectorX, 2) + pow(vectorY, 2));
@@ -72,7 +72,7 @@ double Triangle::calculateLength(Vertex vertexA, Vertex vertexB){
 //----------------------------------------------------
 
 void Triangle::draw(Board& board) const {
-   
+
 	board.drawLine(m_vertex1, m_vertex2);
 	board.drawLine(m_vertex2, m_vertex3);
 	board.drawLine(m_vertex3, m_vertex1);
@@ -85,14 +85,14 @@ Rectangle Triangle::getBoundingRectangle() const {
 		Rectangle temp(m_vertex1, getLength(), getHeight());
 		return temp;
 	}
-	
+
 	Vertex vertex1(m_vertex1.m_col, m_vertex2.m_row);
 	Rectangle temp(vertex1, m_vertex3);
 	return temp;
 }
 //----------------------------------------------------
 double Triangle::getArea() const {
-	
+
 	return (getLength() * getHeight()) / 2;
 }
 //----------------------------------------------------
@@ -103,38 +103,40 @@ double Triangle::getPerimeter() const {
 //----------------------------------------------------
 Vertex Triangle::getCenter() const {
 
-	double centerX = (m_vertex1.m_col + m_vertex2.m_col + m_vertex3.m_col)/3;
-	double centerY = (m_vertex1.m_row + m_vertex2.m_row + m_vertex3.m_row)/3;
+	double centerX = (m_vertex1.m_col + m_vertex2.m_col + m_vertex3.m_col) / 3;
+	double centerY = (m_vertex1.m_row + m_vertex2.m_row + m_vertex3.m_row) / 3;
 	Vertex center(centerX, centerY);
 	return center;
 }
 //----------------------------------------------------
 bool Triangle::scale(double factor) {
+	
 	Vertex center = getCenter();
 	m_vertex1.m_col = center.m_col + factor * (m_vertex1.m_col - center.m_col);
 	m_vertex1.m_row = m_vertex3.m_row = center.m_row + factor * (m_vertex1.m_row - center.m_row);
 	m_vertex2.m_row = center.m_row + factor * (m_vertex2.m_row - center.m_row);
 	m_vertex3.m_col = center.m_col + factor * (m_vertex3.m_col - center.m_col);
-	if (checkCond())
+	if (checkCond(m_vertex1,m_vertex2,m_vertex3))
 		return false;
 	return true;
-
-/*
-Vertex center = getCenter();
-Vertex leftPoint(center.m_col + factor * (m_vertex1.m_col - center.m_col),
-	             center.m_row + factor * (m_vertex1.m_row - center.m_row));
-Vertex middlePoint(m_vertex2.m_col, center.m_row + factor * (m_vertex2.m_row - center.m_row));
-Vertex rightPoint(center.m_col + factor * (m_vertex3.m_col - center.m_col), 
-	              center.m_row + factor * (m_vertex1.m_row - center.m_row));
-
-if (checkCond(leftPoint, middlePoint, rightPoint))
-	return false;
-
-m_vertex1 = leftPoint;
-m_vertex2 = middlePoint;
-m_vertex3 = rightPoint;
-return true;
-*/
-
+	
+	
+	
+	/*
+	Vertex center = getCenter();
+	Vertex leftPoint(center.m_col + factor * (m_vertex1.m_col - center.m_col),
+		             center.m_row + factor * (m_vertex1.m_row - center.m_row));
+	Vertex middlePoint(m_vertex2.m_col, center.m_row + factor * (m_vertex2.m_row - center.m_row));
+	Vertex rightPoint(center.m_col + factor * (m_vertex3.m_col - center.m_col), 
+		              center.m_row + factor * (m_vertex1.m_row - center.m_row));
+	
+	if (checkCond(leftPoint, middlePoint, rightPoint))
+		return false;
+	
+	m_vertex1 = leftPoint;
+	m_vertex2 = middlePoint;
+	m_vertex3 = rightPoint;
+	return true;
+	*/
+	
 }
-
