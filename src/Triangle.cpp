@@ -120,5 +120,3 @@ bool Triangle::scale(double factor) {
 	return true;
 }
 
-	return false;
-}
