@@ -2,12 +2,8 @@
 #include <cmath>
 
 Hexagram::Hexagram(Vertex firstTriangle[3], Vertex secondTriangle[3])
-	: m_vertexFirst1(firstTriangle[0].m_col, firstTriangle[0].m_row),
-	m_vertexFirst2(firstTriangle[1].m_col, firstTriangle[1].m_row),
-	m_vertexFirst3(firstTriangle[2].m_col, firstTriangle[2].m_row),
-	m_vertexSecond1(secondTriangle[0].m_col, secondTriangle[0].m_row),
-	m_vertexSecond2(secondTriangle[1].m_col, secondTriangle[1].m_row),
-	m_vertexSecond3(secondTriangle[2].m_col, secondTriangle[2].m_row)
+	: m_firstTriangle(firstTriangle[0], firstTriangle[1], firstTriangle[2]),
+	m_secondTriangle(secondTriangle[0], secondTriangle[1], secondTriangle[2])
 {
 	if (checkCond())
 		DefaultHexagram();
@@ -16,8 +12,8 @@ Hexagram::Hexagram(Vertex firstTriangle[3], Vertex secondTriangle[3])
 	
 //--------------------------------------------------
 Hexagram::Hexagram(const Triangle& t1, const Triangle& t2)
-	:m_t1(t1.Vertex1, t1.Vertex2, t1.Vertex3),
-	m_t2(t2.Vertex1, t2.Vertex2, t2.Vertex3)
+	:m_firstTriangle(t1.Vertex1, t1.Vertex2, t1.Vertex3),
+	m_secondTriangle(t2.Vertex1, t2.Vertex2, t2.Vertex3)
 {
 	if (checkCond())
 		DefaultHexagram();
@@ -26,20 +22,63 @@ Hexagram::Hexagram(const Triangle& t1, const Triangle& t2)
 
 //---------------------------------------------------
 
-void Hexagram::DefaultHexagram(); {
+void Hexagram::DefaultHexagram() {
 	Triangle defaultTrian1(20, 20, 25, 20 + sqrt(75), 30, 20);
 	Triangle defaultTrian2(20, 20 + sqrt(75), 25, 20 - sqrt(75) / 3, 30, 20 + sqrt(75) * 2 / 3);
-	m_t1 = defaultTrian1;
-	m_t2 = defaultTrian2;
+	m_firstTriangle = defaultTrian1;
+	m_secondTriangle = defaultTrian2;
+}
+
+//----------------------------------------------------
+
+double Hexagram::getTotalHeight() const {
+
+	return (m_firstTriangle.getHeight() + m_secondTriangle.getHeight());
+}
+
+
+//----------------------------------------------------
+
+double Hexagram::getLength() const {
+
+	return (m_firstTriangle.getLength());
 }
 
 //----------------------------------------------------
 
 void Hexagram::draw(Board& board) const {
-	m_t1.draw(board);
-	m_t2.draw(board);
+	m_firstTriangle.draw(board);
+	m_secondTriangle.draw(board);
 }
 
+	//------------------------------------------------
+
+Rectangle Hexagram::getBoundingRectangle() const {
+
+	Rectangle n = 1.0, 1.0, 5, 5
+	return n;
+	}
+
+	//-----------------------------------------------
+
+double Hexagram::getArea() const {
+
+	return 1;
+	}
+
+	//----------------------------------------------
+
+double Hexagram::getPerimeter() const {
+
+	return (1, 1);
+}
+	//---------------------------------------------
+
+Vertex Hexagram::getCenter() const {
+
+	return (1, 1);
+
+}
 //----------------------------------------------------------------------
 bool Hexagram::scale(double factor) {
 
