@@ -1,28 +1,59 @@
-#include "Vertex.h"
-#include "Rectangle.h"
-#include "Board.h"
-#include "Triangle.h"
+#include "Hexagram.h"
+#include <cmath>
 
-class Hexagram {
-
-public:
-	Hexagram(Vertex firstTriangle[3], Vertex secondTriangle[3]);
-	Hexagram(const Triangle& t1, const Triangle& t2);
-	double getTotalHeight() const;
-	double getLength() const;
-
-	void draw(Board& board) const;
-	Rectangle getBoundingRectangle() const;
-	double getArea() const;
-	double getPerimeter() const;
-	Vertex getCenter() const;
-	bool scale(double factor);
-
-private:
-	Triangle m_firstTriangle;
-	Triangle m_secondTriangle;
-	bool checkCond();
-	void DefaultHexagram();
-};
+Hexagram::Hexagram(Vertex firstTriangle[3], Vertex secondTriangle[3])
+	: m_firstTriangle(firstTriangle[0], firstTriangle[1], firstTriangle[2]),
+	m_secondTriangle(secondTriangle[0], secondTriangle[1], secondTriangle[2])
+{
+	if (checkCond())
+		DefaultHexagram();
+}
 
 	
+//--------------------------------------------------
+Hexagram::Hexagram(const Triangle& t1, const Triangle& t2)
+	:m_firstTriangle(t1.Vertex1, t1.Vertex2, t1.Vertex3),
+	m_secondTriangle(t2.Vertex1, t2.Vertex2, t2.Vertex3)
+{
+	if (checkCond())
+		DefaultHexagram();
+}
+
+
+//---------------------------------------------------
+
+void Hexagram::DefaultHexagram() {
+	Triangle defaultTrian1(20, 20, 25, 20 + sqrt(75), 30, 20);
+	Triangle defaultTrian2(20, 20 + sqrt(75), 25, 20 - sqrt(75) / 3, 30, 20 + sqrt(75) * 2 / 3);
+	m_firstTriangle = defaultTrian1;
+	m_secondTriangle = defaultTrian2;
+}
+
+//----------------------------------------------------
+
+double Hexagram::getTotalHeight() const {
+
+	return (m_firstTriangle.getHeight() + m_secondTriangle.getHeight());
+}
+
+
+//----------------------------------------------------
+
+double Hexagram::getLength() const {
+
+	return (m_firstTriangle.getLength());
+}
+
+//----------------------------------------------------
+
+void Hexagram::draw(Board& board) const {
+	m_firstTriangle.draw(board);
+	m_secondTriangle.draw(board);
+}
+
+//----------------------------------------------------------------------
+bool Hexagram::scale(double factor) {
+
+
+	return false;
+}
