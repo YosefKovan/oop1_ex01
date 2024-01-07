@@ -3,18 +3,15 @@
 #include <cmath>
 
 Triangle::Triangle(const Vertex vertices[3])
-	: m_vertex1(vertices[0].m_col, vertices[0].m_row),
-	  m_vertex2(vertices[1].m_col, vertices[1].m_row),
-	  m_vertex3(vertices[2].m_col, vertices[2].m_row)
-{
+	: m_vertex1(vertices[0]), m_vertex2(vertices[1]), m_vertex3(vertices[2])
+{  
 	if (checkCond(m_vertex1, m_vertex2, m_vertex3))
 		changeTriangleVertices();
 }
 //----------------------------------------------------
 Triangle::Triangle(const Vertex& left, const Vertex& right, double height)
-	: m_vertex1(left.m_col, left.m_row),
-	m_vertex2((right.m_col - left.m_col) / 2, right.m_row + height),
-	m_vertex3(right.m_col, right.m_row)
+	: m_vertex1(left), m_vertex3(right),
+	  m_vertex2((right.m_col - left.m_col) / 2, right.m_row + height)	  
 {
 	if (checkCond(m_vertex1, m_vertex2, m_vertex3))
 		changeTriangleVertices();
@@ -46,8 +43,8 @@ bool Triangle::checkCond(Vertex vertex1, Vertex vertex2, Vertex vertex3) {
 		return true;
 	if (!doubleEqual(vertex1.m_row ,vertex3.m_row))
 		return true;
-	if (!doubleEqual(getLength(), calculateLength(vertex1, vertex2)) ||
-		!doubleEqual(getLength(), calculateLength(vertex1, vertex2)))
+	if (!doubleEqual(calcLen(vertex1, vertex3), calcLen(vertex1,vertex2)) ||
+		!doubleEqual(calcLen(vertex2, vertex3), calcLen(vertex1, vertex2)))
 		return true;
 
 	return false;
@@ -63,7 +60,7 @@ void Triangle::changeTriangleVertices() {
 
 }
 //----------------------------------------------------
-double Triangle::calculateLength(Vertex vertexA, Vertex vertexB) {
+double Triangle::calcLen(Vertex vertexA, Vertex vertexB) {
 
 	double vectorX = vertexA.m_col - vertexB.m_col;
 	double vectorY = vertexA.m_row - vertexB.m_row;
@@ -82,13 +79,13 @@ Rectangle Triangle::getBoundingRectangle() const {
 
 	//this check if the triangle is pointed upwards 
 	if (m_vertex1.m_row < m_vertex2.m_row) {
-		Rectangle temp(m_vertex1, getLength(), getHeight());
-		return temp;
+		Rectangle boundingRect(m_vertex1, getLength(), getHeight());
+		return boundingRect;
 	}
 
 	Vertex vertex1(m_vertex1.m_col, m_vertex2.m_row);
-	Rectangle temp(vertex1, m_vertex3);
-	return temp;
+	Rectangle boundingRect(vertex1, m_vertex3);
+	return boundingRect;
 }
 //----------------------------------------------------
 double Triangle::getArea() const {
@@ -110,33 +107,26 @@ Vertex Triangle::getCenter() const {
 }
 //----------------------------------------------------
 bool Triangle::scale(double factor) {
-	
+
 	Vertex center = getCenter();
-	m_vertex1.m_col = center.m_col + factor * (m_vertex1.m_col - center.m_col);
-	m_vertex1.m_row = m_vertex3.m_row = center.m_row + factor * (m_vertex1.m_row - center.m_row);
-	m_vertex2.m_row = center.m_row + factor * (m_vertex2.m_row - center.m_row);
-	m_vertex3.m_col = center.m_col + factor * (m_vertex3.m_col - center.m_col);
-	if (checkCond(m_vertex1,m_vertex2,m_vertex3))
-		return false;
-	return true;
-	
-	
-	
-	/*
-	Vertex center = getCenter();
-	Vertex leftPoint(center.m_col + factor * (m_vertex1.m_col - center.m_col),
-		             center.m_row + factor * (m_vertex1.m_row - center.m_row));
-	Vertex middlePoint(m_vertex2.m_col, center.m_row + factor * (m_vertex2.m_row - center.m_row));
-	Vertex rightPoint(center.m_col + factor * (m_vertex3.m_col - center.m_col), 
-		              center.m_row + factor * (m_vertex1.m_row - center.m_row));
-	
+
+	Vertex leftPoint = getScaleVertex(center, m_vertex1, factor);
+	Vertex middlePoint = getScaleVertex(center, m_vertex2, factor);
+	Vertex rightPoint = getScaleVertex(center, m_vertex3, factor);
+
 	if (checkCond(leftPoint, middlePoint, rightPoint))
 		return false;
-	
+
 	m_vertex1 = leftPoint;
 	m_vertex2 = middlePoint;
 	m_vertex3 = rightPoint;
 	return true;
-	*/
-	
+}
+//----------------------------------------------------
+Vertex Triangle::getScaleVertex(Vertex center, Vertex vertex, double factor) {
+	//this function will return the the new scaled point
+	double col = center.m_col + factor * (vertex.m_col - center.m_col);
+	double row = center.m_row + factor * (vertex.m_row - center.m_row);
+	Vertex scaleVertex(col, row);
+	return scaleVertex;	
 }
