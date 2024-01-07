@@ -1,8 +1,6 @@
-#pragma once
 
 #include "Vertex.h"
 #include "Board.h"
-
 
 class Rectangle {
 
@@ -23,12 +21,11 @@ public:
 	double getPerimeter() const;
 	Vertex getCenter() const;
 	bool scale(double factor);
-
 	  
 private:
 	Vertex m_bottomLeft;
 	Vertex m_topRight;
 	bool checkCond(Vertex, Vertex); //for future use as well
 	void changeToDefault();
-	Vertex centerToPoint(Vertex, Vertex, double, bool botLeft);
+	Vertex getScaleVertex(Vertex, Vertex, double);
 };
