@@ -23,7 +23,8 @@ private:
 	Vertex m_vertex1;
 	Vertex m_vertex2;
 	Vertex m_vertex3;
-	double calculateLength(Vertex, Vertex);
+	double calcLen(Vertex, Vertex);
 	bool checkCond(Vertex, Vertex, Vertex);
 	void changeTriangleVertices();
+	Vertex getScaleVertex(Vertex, Vertex, double);
 };
