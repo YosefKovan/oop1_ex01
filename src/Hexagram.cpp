@@ -56,8 +56,8 @@ void Hexagram::DefaultHexagram() {
 //----------------------------------------------------
 
 double Hexagram::getTotalHeight() const {
-
-	return (m_firstTriangle.getHeight() + m_secondTriangle.getHeight());
+	
+	return (distance(m_firstTriangle.getVertex(2), m_secondTriangle.getVertex(2)));
 }
 
 
@@ -80,21 +80,14 @@ void Hexagram::draw(Board& board) const {
 
 Rectangle Hexagram::getBoundingRectangle() const {
 
-		// Get the bounding rectangles of each triangle
-		Rectangle rect1 = m_firstTriangle.getBoundingRectangle();
-		Rectangle rect2 = m_secondTriangle.getBoundingRectangle();
 
-		// Combine the bounding rectangles
-		// This might involve finding the minimum and maximum x and y values
-		// of both rectangles and creating a new rectangle based on those values
-		double minX = std::min(rect1.getBottomLeft().m_col, rect2.getBottomLeft().m_col);
-		double minY = std::min(rect1.getBottomLeft().m_row, rect2.getBottomLeft().m_row);
-		double maxX = std::max(rect1.getTopRight().m_col, rect2.getTopRight().m_col);
-		double maxY = std::max(rect1.getTopRight().m_row, rect2.getTopRight().m_row);
+	double X = m_firstTriangle.getVertex(1).m_col;
+	double minY = std::min(m_firstTriangle.getVertex(2).m_row, m_secondTriangle.getVertex(2).m_row);
+	Vertex m_BottomLeft(X, minY);
+	Rectangle temp(m_BottomLeft, getLength(), getTotalHeight());
+	return (temp);
 
-		Rectangle combinedRect(Vertex(minX, minY), Vertex(maxX, maxY));
-		return combinedRect;
-	}
+}
 
 
 	//-----------------------------------------------
