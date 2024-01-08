@@ -1,4 +1,3 @@
-#include "Utilities.h"
 #include "Triangle.h"
 #include <cmath>
 
