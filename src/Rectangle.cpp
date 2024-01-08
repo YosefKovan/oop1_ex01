@@ -5,13 +5,18 @@
 
 
 Rectangle::Rectangle(const Vertex& bottomLeft, const Vertex& topRight) 
-    : Rectangle(bottomLeft.m_col, bottomLeft.m_row, topRight.m_col, topRight.m_row)
-{}
+    : m_bottomLeft(bottomLeft), m_topRight(topRight)
+{
+	if (checkCond(m_bottomLeft, m_topRight))
+		changeToDefault();
+}
 //------------------------------------------------------
 Rectangle::Rectangle(const Vertex vertices[2])
-	: Rectangle(vertices[0].m_col, vertices[0].m_row, 
-		        vertices[1].m_col, vertices[1].m_row)
-{}
+	: m_bottomLeft(vertices[0]) ,m_topRight(vertices[1])
+{
+	if (checkCond(m_bottomLeft, m_topRight))
+		changeToDefault();
+}
 //------------------------------------------------------
 Rectangle::Rectangle(double x0, double y0, double x1, double y1)
 	: m_bottomLeft(x0, y0), m_topRight(x1, y1)
