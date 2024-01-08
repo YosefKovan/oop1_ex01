@@ -1,7 +1,7 @@
+
 #include "Vertex.h"
-#include "Rectangle.h"
-#include "Board.h"
 #include "Triangle.h"
+#include "Rectangle.h"
 
 class Hexagram {
 
@@ -19,10 +19,8 @@ public:
 	bool scale(double factor);
 
 private:
-	Triangle m_firstTriangle;
-	Triangle m_secondTriangle;
-	bool checkCond();
-	void DefaultHexagram();
+	Triangle m_triangle1;
+	Triangle m_triangle2;
+	bool conditionsOccur();
+	void setDefault();
 };
-
-	
