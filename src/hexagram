@@ -1,0 +1,105 @@
+
+
+#include "Utilities.h"
+#include "Hexagram.h"
+#include <cmath>
+#include "Rectangle.h"
+
+Hexagram::Hexagram(Vertex firstTriangle[3], Vertex secondTriangle[3])
+	    : m_up(firstTriangle), m_down(secondTriangle)
+{
+	 if(!conditionsOccur())
+	    setDefault();
+	 //this will set the triangle accordingly for future use
+	 setFacingUpDown(); 
+}
+//--------------------------------------------------------------------
+Hexagram::Hexagram(const Triangle& t1, const Triangle& t2)
+    : m_up(t1), m_down(t2)
+{
+	 if(!conditionsOccur())
+	    setDefault();
+	 setFacingUpDown();
+}
+//--------------------------------------------------------------------
+double Hexagram::getTotalHeight() const{
+
+	 return abs(m_up.getVertex(2).m_row - m_down.getVertex(2).m_row);
+}
+//--------------------------------------------------------------------
+double Hexagram::getLength() const{
+
+	 return abs(m_up.getVertex(1).m_col - m_up.getVertex(3).m_col);
+}
+//--------------------------------------------------------------------
+bool Hexagram::conditionsOccur() {
+
+	if (!doubleEqual(m_up.getCenter().m_col, m_down.getCenter().m_col) ||
+		!doubleEqual(m_up.getCenter().m_row, m_down.getCenter().m_row))
+		return false;
+	if (doubleEqual(m_up.getVertex(1).m_row, m_down.getVertex(1).m_row))
+		return false;
+	
+	return true;
+}
+//--------------------------------------------------------------------
+void Hexagram::setDefault() {
+	
+	Vertex vertexUp1(20, 20), vertexUp2(25, 20 + sqrt(75)),
+	       vertexUp3(30, sqrt(75) * 2 / 3);
+	
+	Vertex vertexDwn1(20, 20 + sqrt(75) * 2 / 3), 
+		   vertexDwn2(25, 20 - sqrt(75) / 3),
+		   vertexDwn3(30, 20 + sqrt(75) * 2 / 3);
+	
+	Vertex triDown[3] = { vertexDwn1 , vertexDwn2 , vertexDwn3 };
+	Vertex triUp[3] = { vertexUp1 , vertexUp2 , vertexUp3 };
+	 
+	Triangle triangleUp(triUp), triangleDown(triDown);
+	m_up = triangleUp;
+	m_down = triangleDown;
+}
+//--------------------------------------------------------------------
+void Hexagram::draw(Board& board) const {
+
+	m_up.draw(board);
+	m_down.draw(board);
+}
+//--------------------------------------------------------------------
+Rectangle Hexagram::getBoundingRectangle() const {
+
+	Vertex bottomLeft(m_down.getVertex(1).m_col, m_down.getVertex(2).m_row);
+	Vertex topRight(m_up.getVertex(3).m_col, m_up.getVertex(2).m_row);
+	Rectangle boundingRectangle(bottomLeft, topRight);
+	return boundingRectangle;
+}
+//--------------------------------------------------------------------
+double Hexagram::getArea() const {
+
+	return m_down.getArea() * 4 / 3;
+}
+//--------------------------------------------------------------------
+double Hexagram::getPerimeter() const {
+
+	return m_down.getPerimeter() * 4 / 3;
+}
+//--------------------------------------------------------------------
+Vertex Hexagram::getCenter() const {
+
+	return m_up.getCenter();
+}
+//--------------------------------------------------------------------
+bool Hexagram::scale(double factor) {
+
+	return (m_up.scale(factor) && m_down.scale(factor));		
+}
+//--------------------------------------------------------------------
+void Hexagram::setFacingUpDown() {
+
+	//the first triangle will face up and the second face down
+	if (m_up.getVertex(2).m_row < m_down.getVertex(2).m_row) {
+		Triangle temp(m_up);
+		m_up = m_down;
+		m_down = temp;
+	}
+}
