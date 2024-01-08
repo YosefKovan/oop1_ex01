@@ -47,8 +47,8 @@ void Hexagram::setDefault() {
 	Vertex t1VertexArr[3] = { vertex1Tri1 , vertex2Tri1 , vertex3Tri1 };
 	
 	Vertex vertex1Tri2(20, 20 + sqrt(75) * 2 / 3),
-		   vertex2Tri2(25, 20 - sqrt(75) / 3),
-		   vertex3Tri2(30, 20 + sqrt(75) * 2 / 3);
+		vertex2Tri2(25, 20 - sqrt(75) / 3),
+		vertex3Tri2(30, 20 + sqrt(75) * 2 / 3);
 	Vertex t2VertexArr[3] = { vertex1Tri2 , vertex2Tri2 , vertex3Tri2 };
 	 
 	Triangle triangle1(t1VertexArr), triangle2(t2VertexArr);
@@ -67,9 +67,10 @@ Rectangle Hexagram::getBoundingRectangle() const {
 	double bottomLeftRow;
 
 	if (m_triangle1.getVertex(2).m_row < m_triangle2.getVertex(2).m_row)
-		bottomLeftRow = m_triangle1.getVertex(2).m_row;
-	else 
-		bottomLeftRow = m_triangle2.getVertex(2).m_row;
+	    bottomLeftRow = m_triangle1.getVertex(2).m_row;
+	else
+	    bottomLeftRow = m_triangle2.getVertex(2).m_row;
+	
 	
 	Vertex bottomLeft(m_triangle2.getVertex(1).m_col, bottomLeftRow);
 	Rectangle boundingRectangle(bottomLeft, getLength(), getTotalHeight());
